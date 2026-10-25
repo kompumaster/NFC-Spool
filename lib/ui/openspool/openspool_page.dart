@@ -903,7 +903,7 @@ class _ReadResultCard extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Wrap(
-              alignment: WrapAlignment.end,
+              alignment: WrapAlignment.start,
               spacing: 8,
               runSpacing: 8,
               children: [
