@@ -30,6 +30,10 @@ class SnapmakerService {
   final int port;
   final http.Client _client;
 
+  void close() {
+    _client.close();
+  }
+
   Uri _uri(String path, [Map<String, String>? query]) {
     return Uri(
       scheme: 'http',

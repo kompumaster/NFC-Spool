@@ -45,9 +45,10 @@ class _SnapmakerSendDialogState extends State<_SnapmakerSendDialog> {
 
   Future<void> _load() async {
     final store = context.read<SnapmakerSettingsStore>();
+    SnapmakerService? service;
     try {
       await store.ensureLoaded();
-      final service = SnapmakerService(host: store.host, port: store.port);
+      service = SnapmakerService(host: store.host, port: store.port);
       final heads = await service.getToolHeads();
       if (mounted) {
         setState(() => _heads = heads);
@@ -56,6 +57,8 @@ class _SnapmakerSendDialogState extends State<_SnapmakerSendDialog> {
       if (mounted) {
         setState(() => _error = e.toString());
       }
+    } finally {
+      service?.close();
     }
   }
 
@@ -180,6 +183,8 @@ class _SnapmakerSendDialogState extends State<_SnapmakerSendDialog> {
           _sending = null;
         });
       }
+    } finally {
+      service.close();
     }
   }
 }

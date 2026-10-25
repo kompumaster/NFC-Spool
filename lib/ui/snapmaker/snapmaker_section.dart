@@ -235,15 +235,19 @@ class _SnapmakerSectionState extends State<SnapmakerSection> {
 
   Future<void> _refreshInternal(SnapmakerSettingsStore store) async {
     final service = SnapmakerService(host: store.host, port: store.port);
-    final heads = await service.getToolHeads();
-    if (!mounted) {
-      return;
+    try {
+      final heads = await service.getToolHeads();
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        _toolHeads = heads;
+        _status = 'Связь с U1 установлена';
+        _error = null;
+      });
+    } finally {
+      service.close();
     }
-    setState(() {
-      _toolHeads = heads;
-      _status = 'Связь с U1 установлена';
-      _error = null;
-    });
   }
 
   Color? _parseColor(String hex) {
