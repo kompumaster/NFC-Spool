@@ -33,7 +33,9 @@ class _QidiPageState extends State<QidiPage> {
     final model = appState.qidiModel;
     final language = appState.language;
     final lists = context.watch<QidiListsStore>();
-    final available = context.watch<NfcService>().isAvailable;
+    final nfc = context.watch<NfcService>();
+    final available = nfc.isAvailable;
+    final nfcBusy = nfc.isBusy;
     final materials = lists.materialsFor(model);
     final selectedMaterial =
         lists.materialById(
@@ -66,7 +68,7 @@ class _QidiPageState extends State<QidiPage> {
           Expanded(
             child: TabBarView(
               children: [
-                _buildReadTab(model, lists, available, _readError),
+                _buildReadTab(model, lists, available, nfcBusy, _readError),
                 _buildWriteTab(
                   model: model,
                   lists: lists,
@@ -75,6 +77,7 @@ class _QidiPageState extends State<QidiPage> {
                   selectedColor: selectedColor,
                   selectedManufacturer: selectedManufacturer,
                   available: available,
+                  nfcBusy: nfcBusy,
                   writeError: _writeError,
                 ),
               ],
@@ -89,6 +92,7 @@ class _QidiPageState extends State<QidiPage> {
     QidiPrinterModel model,
     QidiListsStore lists,
     bool available,
+    bool nfcBusy,
     String? readError,
   ) {
     return ListView(
@@ -106,7 +110,7 @@ class _QidiPageState extends State<QidiPage> {
         ],
         const SizedBox(height: 12),
         FilledButton.icon(
-          onPressed: _busy || !available ? null : _read,
+          onPressed: _busy || !available || nfcBusy ? null : _read,
           icon: _busy
               ? const SizedBox.square(
                   dimension: 18,
@@ -148,6 +152,7 @@ class _QidiPageState extends State<QidiPage> {
     required QidiColor selectedColor,
     required QidiManufacturer selectedManufacturer,
     required bool available,
+    required bool nfcBusy,
     required String? writeError,
   }) {
     final preview = QidiTagData(
@@ -283,7 +288,9 @@ class _QidiPageState extends State<QidiPage> {
         _PreviewCard(data: preview),
         const SizedBox(height: 16),
         FilledButton.icon(
-          onPressed: _busy || !available ? null : () => _write(preview),
+          onPressed: _busy || !available || nfcBusy
+              ? null
+              : () => _write(preview),
           icon: _busy
               ? const SizedBox.square(
                   dimension: 18,
@@ -319,7 +326,9 @@ class _QidiPageState extends State<QidiPage> {
     });
 
     try {
-      final data = await QidiTagService(FlutterNfcTagTransport()).read();
+      final data = await nfc.runExclusive(
+        () => QidiTagService(FlutterNfcTagTransport()).read(),
+      );
       if (!mounted) {
         return;
       }
@@ -349,7 +358,9 @@ class _QidiPageState extends State<QidiPage> {
     });
 
     try {
-      await QidiTagService(FlutterNfcTagTransport()).write(data);
+      await nfc.runExclusive(
+        () => QidiTagService(FlutterNfcTagTransport()).write(data),
+      );
       if (!mounted) {
         return;
       }

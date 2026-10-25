@@ -42,7 +42,9 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
     final qidi = _record.qidiData;
     final os = _record.openspoolData;
     final language = context.watch<AppState>().language;
-    final available = context.watch<NfcService>().isAvailable;
+    final nfc = context.watch<NfcService>();
+    final available = nfc.isAvailable;
+    final nfcBusy = nfc.isBusy;
 
     return Scaffold(
       appBar: AppBar(
@@ -135,7 +137,7 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
             ),
             const SizedBox(height: 16),
             FilledButton.icon(
-              onPressed: _busy || !available ? null : _writeQidi,
+              onPressed: _busy || !available || nfcBusy ? null : _writeQidi,
               icon: _busy
                   ? const SizedBox.square(
                       dimension: 18,
@@ -209,7 +211,9 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
             ),
             const SizedBox(height: 16),
             FilledButton.icon(
-              onPressed: _busy || !available ? null : _writeOpenSpool,
+              onPressed: _busy || !available || nfcBusy
+                  ? null
+                  : _writeOpenSpool,
               icon: _busy
                   ? const SizedBox.square(
                       dimension: 18,
@@ -339,10 +343,13 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
       _message('NFC недоступен.');
       return;
     }
+    final nfc = context.read<NfcService>();
 
     setState(() => _busy = true);
     try {
-      await QidiTagService(FlutterNfcTagTransport()).write(qidi);
+      await nfc.runExclusive(
+        () => QidiTagService(FlutterNfcTagTransport()).write(qidi),
+      );
       if (mounted) {
         _message('Метка записана и проверена');
       }
@@ -397,15 +404,18 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
       _message('NFC недоступен.');
       return;
     }
+    final nfc = context.read<NfcService>();
 
     final repository = context.read<RecordRepository>();
     setState(() => _busy = true);
     try {
       final profile = _record.openspoolProfile ?? OpenSpoolProfile.standard;
-      final result = await OpenSpoolTagService(FlutterNfcTagTransport()).write(
-        os,
-        profile: profile,
-        tier: _record.openspoolTier ?? OpenSpoolTier.standard,
+      final result = await nfc.runExclusive(
+        () => OpenSpoolTagService(FlutterNfcTagTransport()).write(
+          os,
+          profile: profile,
+          tier: _record.openspoolTier ?? OpenSpoolTier.standard,
+        ),
       );
       if (!mounted) {
         return;

@@ -90,7 +90,9 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
     final profile = appState.openspoolProfile;
     final tier = appState.openspoolTier;
     final language = appState.language;
-    final available = context.watch<NfcService>().isAvailable;
+    final nfc = context.watch<NfcService>();
+    final available = nfc.isAvailable;
+    final nfcBusy = nfc.isBusy;
 
     return Column(
       children: [
@@ -111,8 +113,8 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
           child: TabBarView(
             controller: _tabController,
             children: [
-              _buildReadTab(profile, available, _readError),
-              _buildWriteTab(profile, tier, available, _writeError),
+              _buildReadTab(profile, available, nfcBusy, _readError),
+              _buildWriteTab(profile, tier, available, nfcBusy, _writeError),
             ],
           ),
         ),
@@ -123,6 +125,7 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
   Widget _buildReadTab(
     OpenSpoolProfile profile,
     bool available,
+    bool nfcBusy,
     String? readError,
   ) {
     return ListView(
@@ -144,7 +147,7 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
         ],
         const SizedBox(height: 12),
         FilledButton.icon(
-          onPressed: _busy || !available ? null : _read,
+          onPressed: _busy || !available || nfcBusy ? null : _read,
           icon: _busy
               ? const SizedBox.square(
                   dimension: 18,
@@ -185,6 +188,7 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
     OpenSpoolProfile profile,
     OpenSpoolTier tier,
     bool available,
+    bool nfcBusy,
     String? writeError,
   ) {
     final isU1 = profile == OpenSpoolProfile.u1;
@@ -407,7 +411,7 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
         _PreviewCard(data: data, profile: profile, tier: tier),
         const SizedBox(height: 16),
         FilledButton.icon(
-          onPressed: _busy || !available
+          onPressed: _busy || !available || nfcBusy
               ? null
               : () => _write(data, profile, tier),
           icon: _busy
@@ -534,7 +538,9 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
     });
 
     try {
-      final data = await OpenSpoolTagService(FlutterNfcTagTransport()).read();
+      final data = await nfc.runExclusive(
+        () => OpenSpoolTagService(FlutterNfcTagTransport()).read(),
+      );
       if (!mounted) {
         return;
       }
@@ -572,8 +578,11 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
     });
 
     try {
-      final result = await OpenSpoolTagService(FlutterNfcTagTransport())
-          .write(data, profile: profile, tier: tier);
+      final result = await nfc.runExclusive(
+        () =>
+            OpenSpoolTagService(FlutterNfcTagTransport())
+                .write(data, profile: profile, tier: tier),
+      );
       if (!mounted) {
         return;
       }

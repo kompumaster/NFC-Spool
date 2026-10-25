@@ -13,32 +13,39 @@ class NfcPage extends StatelessWidget {
     final nfc = context.watch<NfcService>();
     final scheme = Theme.of(context).colorScheme;
     final availability = nfc.availability;
-    final (icon, title, subtitle, color) = switch (availability) {
-      NFCAvailability.available => (
-        Icons.nfc,
-        'NFC доступен',
-        'Можно читать и записывать метки.',
-        scheme.primary,
-      ),
-      NFCAvailability.disabled => (
-        Icons.nfc,
-        'NFC выключен',
-        'Включите NFC в настройках Android и нажмите «Проверить».',
-        scheme.error,
-      ),
-      NFCAvailability.not_supported => (
-        Icons.nfc,
-        'NFC не поддерживается',
-        'Этот телефон не умеет работать с NFC-метками.',
-        scheme.error,
-      ),
-      null => (
-        Icons.nfc,
-        'Проверка NFC…',
-        'Определяю доступность NFC на телефоне.',
-        scheme.onSurfaceVariant,
-      ),
-    };
+    final (icon, title, subtitle, color) = nfc.isBusy
+        ? (
+            Icons.nfc,
+            'Выполняется NFC-операция',
+            'Держите метку до завершения операции.',
+            scheme.tertiary,
+          )
+        : switch (availability) {
+            NFCAvailability.available => (
+              Icons.nfc,
+              'NFC доступен',
+              'Можно читать и записывать метки.',
+              scheme.primary,
+            ),
+            NFCAvailability.disabled => (
+              Icons.nfc,
+              'NFC выключен',
+              'Включите NFC в настройках Android и нажмите «Проверить».',
+              scheme.error,
+            ),
+            NFCAvailability.not_supported => (
+              Icons.nfc,
+              'NFC не поддерживается',
+              'Этот телефон не умеет работать с NFC-метками.',
+              scheme.error,
+            ),
+            null => (
+              Icons.nfc,
+              'Проверка NFC…',
+              'Определяю доступность NFC на телефоне.',
+              scheme.onSurfaceVariant,
+            ),
+          };
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -49,7 +56,7 @@ class NfcPage extends StatelessWidget {
             title: LText(title),
             subtitle: LText(subtitle),
             trailing: IconButton(
-              onPressed: nfc.isChecking ? null : nfc.refresh,
+              onPressed: nfc.isChecking || nfc.isBusy ? null : nfc.refresh,
               icon: nfc.isChecking
                   ? const SizedBox.square(
                       dimension: 20,

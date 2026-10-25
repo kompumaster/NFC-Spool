@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -30,6 +32,46 @@ void main() {
 
     expect(service.isAvailable, isFalse);
     expect(service.isUnsupported, isTrue);
+
+    service.dispose();
+  });
+
+  test('exclusive NFC operations cannot overlap', () async {
+    final service = NfcService(probe: () async => NFCAvailability.available);
+    final started = Completer<void>();
+    final release = Completer<void>();
+
+    final first = service.runExclusive(() async {
+      started.complete();
+      await release.future;
+      return 1;
+    });
+
+    await started.future;
+    expect(service.isBusy, isTrue);
+
+    await expectLater(
+      service.runExclusive(() async => 2),
+      throwsA(isA<NfcBusyException>()),
+    );
+
+    release.complete();
+    expect(await first, 1);
+    expect(service.isBusy, isFalse);
+
+    service.dispose();
+  });
+
+  test('exclusive lock resets after an error', () async {
+    final service = NfcService(probe: () async => NFCAvailability.available);
+
+    await expectLater(
+      service.runExclusive<void>(() async => throw Exception('write failed')),
+      throwsA(isA<Exception>()),
+    );
+
+    expect(service.isBusy, isFalse);
+    expect(await service.runExclusive(() async => 3), 3);
 
     service.dispose();
   });

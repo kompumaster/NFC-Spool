@@ -80,6 +80,9 @@ class AppTranslations {
     'Проверка NFC…': 'Checking NFC…',
     'Определяю доступность NFC на телефоне.':
         'Checking NFC availability on this phone.',
+    'Выполняется NFC-операция': 'NFC operation in progress',
+    'Держите метку до завершения операции.':
+        'Hold the tag until the operation finishes.',
     'Как пользоваться': 'How to use',
     'Откройте вкладку «Метка» и выберите QIDI, OpenSpool или Snapmaker U1.':
         'Open the “Tag” tab and choose QIDI, OpenSpool, or Snapmaker U1.',
@@ -98,6 +101,8 @@ class AppTranslations {
         'Place a QIDI tag on the phone and tap “Read tag”.',
     'Приложите NTAG215/216 с OpenSpool-записью к телефону и нажмите «Прочитать метку».': 'Place an NTAG215/216 with an OpenSpool record on the phone and tap “Read tag”.',
     'NFC недоступен.': 'NFC is unavailable.',
+    'Уже выполняется другая NFC-операция. Дождитесь завершения.':
+        'Another NFC operation is already running. Wait for it to finish.',
     'Это не MIFARE Classic 1K. Приложите QIDI-метку к телефону.':
         'This is not MIFARE Classic 1K. Place a QIDI tag on the phone.',
     'Это не NTAG215/216. Приложите подходящую метку к телефону.':

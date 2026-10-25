@@ -36,7 +36,10 @@ class _HomePageState extends State<HomePage> with WidgetsBindingObserver {
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
-      context.read<NfcService>().refresh();
+      final nfc = context.read<NfcService>();
+      if (!nfc.isBusy) {
+        nfc.refresh();
+      }
     }
   }
 
