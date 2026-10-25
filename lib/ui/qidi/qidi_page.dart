@@ -323,6 +323,7 @@ class _QidiPageState extends State<QidiPage> {
     setState(() {
       _busy = true;
       _readError = null;
+      _readData = null;
     });
 
     try {

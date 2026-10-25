@@ -539,6 +539,7 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
     setState(() {
       _busy = true;
       _readError = null;
+      _readData = null;
     });
 
     try {
