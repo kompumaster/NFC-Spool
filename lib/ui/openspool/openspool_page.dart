@@ -562,7 +562,11 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
         _ntagType = data.ntagType;
         _u1Id = data.id;
       });
-      _showMessage('OpenSpool-метка прочитана');
+      _showMessage(
+        detectedProfile == OpenSpoolProfile.u1
+            ? 'Метка Snapmaker U1 прочитана'
+            : 'OpenSpool-метка прочитана',
+      );
     } catch (e) {
       if (mounted) {
         setState(() => _readError = e.toString());
@@ -605,7 +609,9 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
         _readData = result.data;
       });
       _showMessage(
-        'OpenSpool-метка записана и проверена (${result.ntagType.label})',
+        profile == OpenSpoolProfile.u1
+            ? 'Метка Snapmaker U1 записана и проверена (${result.ntagType.label})'
+            : 'OpenSpool-метка записана и проверена (${result.ntagType.label})',
       );
     } catch (e) {
       if (mounted) {
