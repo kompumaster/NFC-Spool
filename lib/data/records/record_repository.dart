@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
+import '../../core/utils/atomic_file.dart';
 import '../openspool/openspool_data.dart';
 import '../qidi/qidi_data.dart';
 import 'tag_record.dart';
@@ -24,6 +25,11 @@ class RecordRepository extends ChangeNotifier {
   Future<void> _load() async {
     final directory = await getApplicationDocumentsDirectory();
     _file = File('${directory.path}${Platform.pathSeparator}records.json');
+    try {
+      await AtomicFileWriter.recover(_file!);
+    } catch (e) {
+      debugPrint('Could not recover records file: $e');
+    }
     if (!await _file!.exists()) {
       _loaded = true;
       notifyListeners();
@@ -179,9 +185,9 @@ class RecordRepository extends ChangeNotifier {
     if (file == null) {
       return;
     }
-    await file.writeAsString(
+    await AtomicFileWriter.writeString(
+      file,
       jsonEncode(_records.map((record) => record.toJson()).toList()),
-      flush: true,
     );
   }
 
