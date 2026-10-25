@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -142,6 +143,24 @@ void main() {
         client: client,
       ).getToolHeads(),
       throwsA(isA<SnapmakerException>()),
+    );
+  });
+
+  test('Snapmaker errors do not expose the response body', () {
+    final error = SnapmakerException(
+      'U1 не принял данные',
+      statusCode: 500,
+      body: '<html>very large server error body</html>',
+    );
+
+    expect(error.toString(), 'U1 не принял данные (HTTP 500)');
+    expect(snapmakerFriendlyError(error), 'Snapmaker вернул ошибку HTTP 500.');
+  });
+
+  test('Snapmaker timeout uses a friendly message', () {
+    expect(
+      snapmakerFriendlyError(TimeoutException('timeout')),
+      contains('Snapmaker U1 не отвечает'),
     );
   });
 }

@@ -15,6 +15,7 @@ import '../../data/records/record_repository.dart';
 import '../../data/snapmaker/snapmaker_models.dart';
 import '../../l10n/app_translations.dart';
 import '../../services/openspool_tag_service.dart';
+import '../../services/snapmaker_status_service.dart';
 import '../snapmaker/snapmaker_send_dialog.dart';
 import '../widgets/alpha_picker_dialog.dart';
 import '../widgets/color_picker_dialog.dart';
@@ -93,6 +94,11 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
     final nfc = context.watch<NfcService>();
     final available = nfc.isAvailable;
     final nfcBusy = nfc.isBusy;
+    final snapmaker = context.watch<SnapmakerStatusService>();
+    final snapmakerBlocked = snapmaker.isBlocked;
+    final snapmakerHint = snapmaker.status == SnapmakerStatus.unknown
+        ? 'Snapmaker не проверен — откройте Настройки → Snapmaker U1 и нажмите «Проверить».'
+        : 'Snapmaker недоступен — проверьте подключение в Настройках.';
 
     return Column(
       children: [
@@ -113,8 +119,23 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
           child: TabBarView(
             controller: _tabController,
             children: [
-              _buildReadTab(profile, available, nfcBusy, _readError),
-              _buildWriteTab(profile, tier, available, nfcBusy, _writeError),
+              _buildReadTab(
+                profile,
+                available,
+                nfcBusy,
+                snapmakerBlocked,
+                snapmakerHint,
+                _readError,
+              ),
+              _buildWriteTab(
+                profile,
+                tier,
+                available,
+                nfcBusy,
+                snapmakerBlocked,
+                snapmakerHint,
+                _writeError,
+              ),
             ],
           ),
         ),
@@ -126,6 +147,8 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
     OpenSpoolProfile profile,
     bool available,
     bool nfcBusy,
+    bool snapmakerBlocked,
+    String snapmakerHint,
     String? readError,
   ) {
     return ListView(
@@ -177,6 +200,8 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
             ),
             onSend: () => _sendToU1(_readData!),
             showSend: profile == OpenSpoolProfile.u1,
+            sendEnabled: !snapmakerBlocked,
+            sendHint: snapmakerBlocked ? snapmakerHint : null,
           )
         else
           const _HintCard(
@@ -193,6 +218,8 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
     OpenSpoolTier tier,
     bool available,
     bool nfcBusy,
+    bool snapmakerBlocked,
+    String snapmakerHint,
     String? writeError,
   ) {
     final isU1 = profile == OpenSpoolProfile.u1;
@@ -433,10 +460,14 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
         const SizedBox(height: 8),
         if (isU1) ...[
           OutlinedButton.icon(
-            onPressed: _busy ? null : () => _sendToU1(data),
+            onPressed: _busy || snapmakerBlocked ? null : () => _sendToU1(data),
             icon: const Icon(Icons.print_outlined),
             label: const LText('Отправить на U1'),
           ),
+          if (snapmakerBlocked) ...[
+            const SizedBox(height: 4),
+            LText(snapmakerHint, style: const TextStyle(fontSize: 12)),
+          ],
           const SizedBox(height: 8),
         ],
         OutlinedButton.icon(
@@ -854,6 +885,8 @@ class _ReadResultCard extends StatelessWidget {
     required this.onSave,
     required this.onSend,
     required this.showSend,
+    required this.sendEnabled,
+    this.sendHint,
   });
 
   final OpenSpoolTagData data;
@@ -862,6 +895,8 @@ class _ReadResultCard extends StatelessWidget {
   final VoidCallback onSave;
   final VoidCallback onSend;
   final bool showSend;
+  final bool sendEnabled;
+  final String? sendHint;
 
   @override
   Widget build(BuildContext context) {
@@ -909,7 +944,7 @@ class _ReadResultCard extends StatelessWidget {
               children: [
                 if (showSend)
                   OutlinedButton.icon(
-                    onPressed: saving ? null : onSend,
+                    onPressed: saving || !sendEnabled ? null : onSend,
                     icon: const Icon(Icons.print_outlined),
                     label: const LText('Отправить на U1'),
                   ),
@@ -920,6 +955,10 @@ class _ReadResultCard extends StatelessWidget {
                 ),
               ],
             ),
+            if (showSend && !sendEnabled && sendHint != null) ...[
+              const SizedBox(height: 8),
+              LText(sendHint!, style: const TextStyle(fontSize: 12)),
+            ],
           ],
         ),
       ),

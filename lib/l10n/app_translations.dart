@@ -210,6 +210,16 @@ class AppTranslations {
     'Нажмите «Проверить», чтобы загрузить состояние ToolHead.':
         'Tap “Check” to load ToolHead status.',
     'Связь с U1 установлена': 'U1 connection established',
+    'Snapmaker U1 не отвечает. Проверьте, что принтер включён, host/port верны и телефон в той же Wi-Fi сети.': 'Snapmaker U1 is not responding. Make sure the printer is on, host/port are correct, and the phone is on the same Wi-Fi network.',
+    'Нет связи со Snapmaker. Проверьте Wi-Fi и host/port.':
+        'No connection to Snapmaker. Check Wi-Fi and host/port.',
+    'Snapmaker вернул ошибку HTTP ': 'Snapmaker returned HTTP error ',
+    'Не удалось связаться со Snapmaker. Проверьте настройки и сеть.':
+        'Could not reach Snapmaker. Check the settings and network.',
+    'Snapmaker недоступен — проверьте подключение в Настройках.':
+        'Snapmaker is unavailable — check the connection in Settings.',
+    'Snapmaker не проверен — откройте Настройки → Snapmaker U1 и нажмите «Проверить».': 'Snapmaker is not checked — open Settings → Snapmaker U1 and tap “Check”.',
+    'Повторить': 'Retry',
     'Пусто': 'Empty',
     'Загружено': 'Loaded',
     'Отправить': 'Send',

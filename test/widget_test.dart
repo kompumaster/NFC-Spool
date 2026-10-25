@@ -6,6 +6,9 @@ import 'package:nfc_spool/app.dart';
 
 void main() {
   const nfcChannel = MethodChannel('flutter_nfc_kit/method');
+  const packageInfoChannel = MethodChannel(
+    'dev.fluttercommunity.plus/package_info',
+  );
 
   setUp(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
@@ -15,11 +18,29 @@ void main() {
           }
           return null;
         });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(packageInfoChannel, (call) async {
+          if (call.method == 'getAll') {
+            return {
+              'appName': 'NFC/Spool',
+              'packageName': 'com.nfcspool.app',
+              'version': '0.1.0',
+              'buildNumber': '1',
+              'buildSignature': '',
+              'installerStore': null,
+              'installTime': null,
+              'updateTime': null,
+            };
+          }
+          return null;
+        });
   });
 
   tearDown(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(nfcChannel, null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(packageInfoChannel, null);
   });
 
   testWidgets('app starts on the NFC tab', (WidgetTester tester) async {

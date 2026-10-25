@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -14,9 +16,25 @@ class SnapmakerException implements Exception {
   @override
   String toString() {
     final code = statusCode == null ? '' : ' (HTTP $statusCode)';
-    final details = body == null || body!.isEmpty ? '' : ': $body';
-    return '$message$code$details';
+    return '$message$code';
   }
+}
+
+String snapmakerFriendlyError(Object error) {
+  if (error is SnapmakerException) {
+    if (error.statusCode != null) {
+      return 'Snapmaker вернул ошибку HTTP ${error.statusCode}.';
+    }
+    return error.message;
+  }
+  if (error is TimeoutException) {
+    return 'Snapmaker U1 не отвечает. Проверьте, что принтер включён, '
+        'host/port верны и телефон в той же Wi-Fi сети.';
+  }
+  if (error is SocketException || error is http.ClientException) {
+    return 'Нет связи со Snapmaker. Проверьте Wi-Fi и host/port.';
+  }
+  return 'Не удалось связаться со Snapmaker. Проверьте настройки и сеть.';
 }
 
 class SnapmakerService {

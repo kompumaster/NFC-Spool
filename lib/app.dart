@@ -6,6 +6,7 @@ import 'core/nfc/nfc_service.dart';
 import 'data/qidi/qidi_lists_store.dart';
 import 'data/records/record_repository.dart';
 import 'data/snapmaker/snapmaker_settings.dart';
+import 'services/snapmaker_status_service.dart';
 import 'ui/home/home_page.dart';
 
 class NfcSpoolApp extends StatelessWidget {
@@ -24,6 +25,7 @@ class NfcSpoolApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (_) => SnapmakerSettingsStore()..ensureLoaded(),
         ),
+        ChangeNotifierProvider(create: (_) => SnapmakerStatusService()),
       ],
       child: MaterialApp(
         title: 'NFC/Spool',

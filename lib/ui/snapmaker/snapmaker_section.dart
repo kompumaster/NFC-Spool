@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import '../../data/snapmaker/snapmaker_models.dart';
 import '../../data/snapmaker/snapmaker_settings.dart';
 import '../../services/snapmaker_service.dart';
+import '../../services/snapmaker_status_service.dart';
 import '../widgets/l_text.dart';
 
 class SnapmakerSection extends StatefulWidget {
@@ -205,7 +206,7 @@ class _SnapmakerSectionState extends State<SnapmakerSection> {
       await _refreshInternal(store);
     } catch (e) {
       if (mounted) {
-        setState(() => _error = e.toString());
+        setState(() => _error = snapmakerFriendlyError(e));
       }
     } finally {
       if (mounted) {
@@ -224,7 +225,7 @@ class _SnapmakerSectionState extends State<SnapmakerSection> {
       await _refreshInternal(store);
     } catch (e) {
       if (mounted) {
-        setState(() => _error = e.toString());
+        setState(() => _error = snapmakerFriendlyError(e));
       }
     } finally {
       if (mounted) {
@@ -234,20 +235,19 @@ class _SnapmakerSectionState extends State<SnapmakerSection> {
   }
 
   Future<void> _refreshInternal(SnapmakerSettingsStore store) async {
-    final service = SnapmakerService(host: store.host, port: store.port);
-    try {
-      final heads = await service.getToolHeads();
-      if (!mounted) {
-        return;
-      }
-      setState(() {
-        _toolHeads = heads;
-        _status = 'Связь с U1 установлена';
-        _error = null;
-      });
-    } finally {
-      service.close();
+    final statusService = context.read<SnapmakerStatusService>();
+    final ok = await statusService.check(host: store.host, port: store.port);
+    if (!mounted) {
+      return;
     }
+    setState(() {
+      _toolHeads = ok ? statusService.toolHeads : const [];
+      _status = ok ? 'Связь с U1 установлена' : null;
+      _error = ok
+          ? null
+          : (statusService.error ??
+                'Не удалось связаться со Snapmaker. Проверьте настройки и сеть.');
+    });
   }
 
   Color? _parseColor(String hex) {

@@ -22,6 +22,7 @@ import '../../data/snapmaker/snapmaker_models.dart';
 import '../../l10n/app_translations.dart';
 import '../../services/openspool_tag_service.dart';
 import '../../services/qidi_tag_service.dart';
+import '../../services/snapmaker_status_service.dart';
 import '../snapmaker/snapmaker_send_dialog.dart';
 
 class RecordDetailPage extends StatefulWidget {
@@ -45,6 +46,11 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
     final nfc = context.watch<NfcService>();
     final available = nfc.isAvailable;
     final nfcBusy = nfc.isBusy;
+    final snapmaker = context.watch<SnapmakerStatusService>();
+    final snapmakerBlocked = snapmaker.isBlocked;
+    final snapmakerHint = snapmaker.status == SnapmakerStatus.unknown
+        ? 'Snapmaker не проверен — откройте Настройки → Snapmaker U1 и нажмите «Проверить».'
+        : 'Snapmaker недоступен — проверьте подключение в Настройках.';
 
     return Scaffold(
       appBar: AppBar(
@@ -235,10 +241,14 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
             if (_record.openspoolProfile == OpenSpoolProfile.u1) ...[
               const SizedBox(height: 8),
               OutlinedButton.icon(
-                onPressed: _busy ? null : _sendOpenSpool,
+                onPressed: _busy || snapmakerBlocked ? null : _sendOpenSpool,
                 icon: const Icon(Icons.print_outlined),
                 label: const LText('Отправить на U1'),
               ),
+              if (snapmakerBlocked) ...[
+                const SizedBox(height: 4),
+                LText(snapmakerHint, style: const TextStyle(fontSize: 12)),
+              ],
             ],
           ],
         ],

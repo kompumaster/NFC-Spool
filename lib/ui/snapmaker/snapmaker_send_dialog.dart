@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../data/snapmaker/snapmaker_models.dart';
 import '../../data/snapmaker/snapmaker_settings.dart';
 import '../../services/snapmaker_service.dart';
+import '../../services/snapmaker_status_service.dart';
 
 Future<void> showSnapmakerSendDialog(
   BuildContext context,
@@ -45,21 +46,23 @@ class _SnapmakerSendDialogState extends State<_SnapmakerSendDialog> {
 
   Future<void> _load() async {
     final store = context.read<SnapmakerSettingsStore>();
-    SnapmakerService? service;
-    try {
-      await store.ensureLoaded();
-      service = SnapmakerService(host: store.host, port: store.port);
-      final heads = await service.getToolHeads();
-      if (mounted) {
-        setState(() => _heads = heads);
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() => _error = e.toString());
-      }
-    } finally {
-      service?.close();
+    final statusService = context.read<SnapmakerStatusService>();
+    setState(() {
+      _heads = null;
+      _error = null;
+    });
+    await store.ensureLoaded();
+    final ok = await statusService.check(host: store.host, port: store.port);
+    if (!mounted) {
+      return;
     }
+    setState(() {
+      _heads = ok ? statusService.toolHeads : null;
+      _error = ok
+          ? null
+          : (statusService.error ??
+                'Не удалось связаться со Snapmaker. Проверьте настройки и сеть.');
+    });
   }
 
   @override
@@ -90,6 +93,15 @@ class _SnapmakerSendDialogState extends State<_SnapmakerSendDialog> {
           ),
           const SizedBox(height: 8),
           const LText('Проверьте host/port в Настройках.'),
+          const SizedBox(height: 8),
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton.icon(
+              onPressed: _sending == null ? _load : null,
+              icon: const Icon(Icons.refresh),
+              label: const LText('Повторить'),
+            ),
+          ),
         ],
       );
     }
@@ -177,9 +189,11 @@ class _SnapmakerSendDialogState extends State<_SnapmakerSendDialog> {
         Navigator.of(context).pop(true);
       }
     } catch (e) {
+      final message = snapmakerFriendlyError(e);
       if (mounted) {
+        context.read<SnapmakerStatusService>().markUnavailable(message);
         setState(() {
-          _error = e.toString();
+          _error = message;
           _sending = null;
         });
       }
