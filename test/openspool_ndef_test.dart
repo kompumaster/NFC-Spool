@@ -83,6 +83,7 @@ void main() {
       'diameter': 1.75,
     });
     expect(standard.diameter, 1.75);
+    expect(standard.detectedProfile, OpenSpoolProfile.standard);
 
     final u1 = OpenSpoolTagData.fromJson({
       'protocol': 'openspool',
@@ -93,6 +94,49 @@ void main() {
       'diameter': 175,
     });
     expect(u1.diameter, 1.75);
+    expect(u1.detectedProfile, OpenSpoolProfile.u1);
+  });
+
+  test('OpenSpool detects U1 without id or alpha', () {
+    final data = OpenSpoolTagData.fromJson({
+      'protocol': 'openspool',
+      'version': '1.0',
+      'type': 'PETG',
+      'color_hex': 'A5FF52',
+      'subtype': 'Basic',
+      'weight': 1000,
+      'diameter': 175,
+    });
+
+    expect(data.detectedProfile, OpenSpoolProfile.u1);
+    expect(data.diameter, 1.75);
+  });
+
+  test('OpenSpool detects U1 by diameter units alone', () {
+    final data = OpenSpoolTagData.fromJson({
+      'protocol': 'openspool',
+      'version': '1.0',
+      'type': 'PLA',
+      'color_hex': 'FFFFFF',
+      'diameter': 175,
+    });
+
+    expect(data.detectedProfile, OpenSpoolProfile.u1);
+    expect(data.diameter, 1.75);
+  });
+
+  test('OpenSpool U1 extra colors select the all tier', () {
+    final data = OpenSpoolTagData.fromJson({
+      'protocol': 'openspool',
+      'version': '1.0',
+      'type': 'PLA',
+      'color_hex': 'FFFFFF',
+      'weight': 1000,
+      'additional_color_hexes': ['000000', 'FFFFFF'],
+    });
+
+    expect(data.detectedProfile, OpenSpoolProfile.u1);
+    expect(data.detectedTier, OpenSpoolTier.all);
   });
 
   test('OpenSpool brands include U1-RFID vendors without duplicates', () {

@@ -170,7 +170,11 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
             data: _readData!,
             profile: profile,
             saving: _busy,
-            onSave: () => _saveData(_readData!),
+            onSave: () => _saveData(
+              _readData!,
+              _readData!.detectedProfile,
+              _readData!.detectedTier,
+            ),
             onSend: () => _sendToU1(_readData!),
             showSend: profile == OpenSpoolProfile.u1,
           )
@@ -543,6 +547,14 @@ class _OpenSpoolPageState extends State<OpenSpoolPage>
       );
       if (!mounted) {
         return;
+      }
+      final detectedProfile = data.detectedProfile;
+      final detectedTier = data.detectedTier;
+      if (detectedProfile != null) {
+        context.read<AppState>().openspoolProfile = detectedProfile;
+      }
+      if (detectedTier != null) {
+        context.read<AppState>().openspoolTier = detectedTier;
       }
       setState(() {
         _readData = data;

@@ -117,8 +117,8 @@ class _RecordsPageState extends State<RecordsPage> {
         final data = OpenSpoolBinCodec.decode(bytes);
         record = await repository.saveOpenSpool(
           data: data,
-          profile: profile,
-          tier: tier,
+          profile: data.detectedProfile ?? profile,
+          tier: data.detectedTier ?? tier,
         );
       } else {
         throw ArgumentError(

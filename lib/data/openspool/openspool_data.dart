@@ -338,6 +338,47 @@ class OpenSpoolTagData {
     return jsonEncode(toJson(profile: profile, tier: tier));
   }
 
+  /// Profile inferred from a tag or `.bin` JSON, or null for a manually
+  /// constructed draft. Drafts must keep the profile selected in the UI.
+  OpenSpoolProfile? get detectedProfile {
+    final raw = rawJson;
+    if (raw == null) {
+      return null;
+    }
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is Map) {
+        return _detectProfile(Map<String, dynamic>.from(decoded));
+      }
+    } catch (_) {
+      // Corrupt raw JSON should not break the UI.
+    }
+    return null;
+  }
+
+  OpenSpoolTier? get detectedTier {
+    final raw = rawJson;
+    if (raw == null) {
+      return null;
+    }
+    try {
+      final decoded = jsonDecode(raw);
+      if (decoded is Map) {
+        final json = Map<String, dynamic>.from(decoded);
+        final colors = json['additional_color_hexes'];
+        if (_detectProfile(json) == OpenSpoolProfile.u1 &&
+            colors is List &&
+            colors.isNotEmpty) {
+          return OpenSpoolTier.all;
+        }
+        return OpenSpoolTier.standard;
+      }
+    } catch (_) {
+      // Corrupt raw JSON should not break the UI.
+    }
+    return null;
+  }
+
   factory OpenSpoolTagData.fromJson(Map<String, dynamic> json) {
     if (json['protocol'] != 'openspool') {
       throw const OpenSpoolFormatException('В JSON нет protocol=openspool');
@@ -360,11 +401,7 @@ class OpenSpoolTagData {
         }
       }
     }
-    final u1Fields =
-        json['id'] != null ||
-        json['alpha'] != null ||
-        json['bed_min_temp'] != null ||
-        json['bed_max_temp'] != null;
+    final u1Fields = _detectProfile(json) == OpenSpoolProfile.u1;
 
     return OpenSpoolTagData(
       type: type.trim(),
@@ -454,6 +491,28 @@ class OpenSpoolTagData {
       uid: uid,
       ntagType: ntagType,
     );
+  }
+
+  static OpenSpoolProfile _detectProfile(Map<String, dynamic> json) {
+    final diameter = _doubleValue(json['diameter']);
+    final hasU1Field =
+        _hasValue(json['id']) ||
+        _hasValue(json['alpha']) ||
+        _hasValue(json['bed_min_temp']) ||
+        _hasValue(json['bed_max_temp']) ||
+        _hasValue(json['weight']) ||
+        (diameter != null && diameter > 10);
+    return hasU1Field ? OpenSpoolProfile.u1 : OpenSpoolProfile.standard;
+  }
+
+  static bool _hasValue(dynamic value) {
+    if (value == null) {
+      return false;
+    }
+    if (value is String) {
+      return value.trim().isNotEmpty;
+    }
+    return true;
   }
 
   static String? _stringValue(dynamic value) {
