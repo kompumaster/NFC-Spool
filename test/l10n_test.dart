@@ -55,15 +55,15 @@ void main() {
       'NFC is available',
     );
     expect(
-      AppTranslations.translate(AppLanguage.en, 'Метка Snapmaker U1 прочитана'),
-      'Snapmaker U1 tag read',
+      AppTranslations.translate(AppLanguage.en, 'Snapmaker-метка прочитана'),
+      'Snapmaker tag read',
     );
     expect(
       AppTranslations.translate(
         AppLanguage.en,
-        'Метка Snapmaker U1 записана и проверена (NTAG215)',
+        'Snapmaker-метка записана и проверена (NTAG215)',
       ),
-      'Snapmaker U1 tag written and verified (NTAG215)',
+      'Snapmaker tag written and verified (NTAG215)',
     );
     expect(
       AppTranslations.translate(AppLanguage.en, 'NFC недоступен.'),

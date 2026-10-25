@@ -61,8 +61,8 @@ class AppTranslations {
         'Could not detect the tag type. Expected NTAG215/216, CC: ',
     'OpenSpool-метка записана и проверена (':
         'OpenSpool tag written and verified (',
-    'Метка Snapmaker U1 записана и проверена (':
-        'Snapmaker U1 tag written and verified (',
+    'Snapmaker-метка записана и проверена (':
+        'Snapmaker tag written and verified (',
     'U1 не вернул filament_detected для ToolHead ':
         'U1 did not return filament_detected for ToolHead ',
   };
@@ -156,7 +156,7 @@ class AppTranslations {
     'NTAG215/216, CC E1 10 3E 00 / E1 10 6D 00, MIME application/json.':
         'NTAG215/216, CC E1 10 3E 00 / E1 10 6D 00, MIME application/json.',
     'OpenSpool-метка прочитана': 'OpenSpool tag read',
-    'Метка Snapmaker U1 прочитана': 'Snapmaker U1 tag read',
+    'Snapmaker-метка прочитана': 'Snapmaker tag read',
     'Запись OpenSpool': 'Write OpenSpool',
     'Запись Snapmaker U1': 'Write Snapmaker U1',
     'JSON/NDEF будет записан в пользовательские страницы NTAG215/216.':
