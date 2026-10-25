@@ -211,6 +211,7 @@ class AppTranslations {
         'Tap “Check” to load ToolHead status.',
     'Связь с U1 установлена': 'U1 connection established',
     'Пусто': 'Empty',
+    'Загружено': 'Loaded',
     'Отправить': 'Send',
     'Закрыть': 'Close',
     'Отправить на Snapmaker U1': 'Send to Snapmaker U1',

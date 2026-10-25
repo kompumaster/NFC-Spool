@@ -50,6 +50,7 @@ void main() {
       'Read tag',
     );
     expect(AppTranslations.translate(AppLanguage.en, 'Русский'), 'Russian');
+    expect(AppTranslations.translate(AppLanguage.en, 'Загружено'), 'Loaded');
     expect(
       AppTranslations.translate(AppLanguage.en, 'NFC доступен'),
       'NFC is available',

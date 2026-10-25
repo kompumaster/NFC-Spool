@@ -182,7 +182,7 @@ class _SnapmakerSectionState extends State<SnapmakerSection> {
                     '${head.colorHex.isEmpty ? '' : ' · ${head.colorHex}'}',
         ),
         trailing: Chip(
-          label: LText(head.empty ? 'Empty' : 'Loaded'),
+          label: LText(head.empty ? 'Пусто' : 'Загружено'),
           visualDensity: VisualDensity.compact,
         ),
       ),

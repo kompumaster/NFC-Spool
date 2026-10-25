@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../app_state.dart';
 import '../../core/nfc/nfc_service.dart';
+import '../../l10n/app_translations.dart';
 import '../widgets/l_text.dart';
 
 class NfcPage extends StatelessWidget {
@@ -10,6 +12,7 @@ class NfcPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final nfc = context.watch<NfcService>();
+    final language = context.watch<AppState>().language;
     final scheme = Theme.of(context).colorScheme;
     final status = nfc.status;
     final (icon, title, subtitle, color) = nfc.isBusy
@@ -68,7 +71,7 @@ class NfcPage extends StatelessWidget {
                       child: CircularProgressIndicator(strokeWidth: 2),
                     )
                   : const Icon(Icons.refresh),
-              tooltip: 'Проверить NFC',
+              tooltip: AppTranslations.translate(language, 'Проверить NFC'),
             ),
           ),
         ),

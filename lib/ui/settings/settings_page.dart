@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -21,6 +22,16 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _cfgBusy = false;
+  late final Future<String> _versionFuture = _loadVersion();
+
+  Future<String> _loadVersion() async {
+    try {
+      final info = await PackageInfo.fromPlatform();
+      return info.version;
+    } catch (_) {
+      return '0.1.0';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +142,13 @@ class _SettingsPageState extends State<SettingsPage> {
         const SizedBox(height: 24),
         const Divider(),
         const SizedBox(height: 8),
-        const LText('NFC/Spool · 0.1.0'),
+        FutureBuilder<String>(
+          future: _versionFuture,
+          builder: (context, snapshot) {
+            final version = snapshot.data ?? '0.1.0';
+            return LText('NFC/Spool · $version');
+          },
+        ),
         const SizedBox(height: 4),
         TextButton.icon(
           onPressed: _openRepository,
