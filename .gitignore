@@ -1,0 +1,76 @@
+# OS / editors
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.log
+*.tmp
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.history/
+.atom/
+.buildlog/
+.swiftpm/
+migrate_working_dir/
+
+# Local logo sources
+/logo_src/
+
+# Flutter / Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub/
+.pub-cache/
+.packages
+/build/
+**/build/
+/coverage/
+**/doc/api/
+app.*.symbols
+app.*.map.json
+.widget_preview/
+
+# Android / Gradle
+**/.gradle/
+**/.kotlin/
+**/local.properties
+**/key.properties
+/android/keys/
+**/*.jks
+**/*.keystore
+**/*.p12
+**/*.pem
+**/*.key
+**/google-services.json
+**/GeneratedPluginRegistrant.java
+**/.cxx/
+**/captures/
+/android/app/debug
+/android/app/profile
+/android/app/release
+
+# Local release output
+/release/
+
+# Build artifacts and packages
+*.apk
+*.aab
+*.ap_
+*.ipa
+*.symbols
+*.dSYM/
+*.hprof
+*.dmp
+*.class
+*.pyc
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+*.secret
+*.secrets
