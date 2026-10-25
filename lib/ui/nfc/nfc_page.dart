@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_nfc_kit/flutter_nfc_kit.dart';
 import 'package:provider/provider.dart';
 
 import '../../core/nfc/nfc_service.dart';
@@ -12,7 +11,7 @@ class NfcPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final nfc = context.watch<NfcService>();
     final scheme = Theme.of(context).colorScheme;
-    final availability = nfc.availability;
+    final status = nfc.status;
     final (icon, title, subtitle, color) = nfc.isBusy
         ? (
             Icons.nfc,
@@ -20,26 +19,32 @@ class NfcPage extends StatelessWidget {
             'Держите метку до завершения операции.',
             scheme.tertiary,
           )
-        : switch (availability) {
-            NFCAvailability.available => (
+        : switch (status) {
+            NfcStatus.available => (
               Icons.nfc,
               'NFC доступен',
               'Можно читать и записывать метки.',
               scheme.primary,
             ),
-            NFCAvailability.disabled => (
+            NfcStatus.disabled => (
               Icons.nfc,
               'NFC выключен',
               'Включите NFC в настройках Android и нажмите «Проверить».',
               scheme.error,
             ),
-            NFCAvailability.not_supported => (
+            NfcStatus.unsupported => (
               Icons.nfc,
               'NFC не поддерживается',
               'Этот телефон не умеет работать с NFC-метками.',
               scheme.error,
             ),
-            null => (
+            NfcStatus.error => (
+              Icons.nfc,
+              'Не удалось проверить NFC',
+              'Нажмите «Проверить», чтобы попробовать снова.',
+              scheme.error,
+            ),
+            NfcStatus.checking => (
               Icons.nfc,
               'Проверка NFC…',
               'Определяю доступность NFC на телефоне.',

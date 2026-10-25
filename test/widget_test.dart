@@ -1,9 +1,27 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:nfc_spool/app.dart';
 
 void main() {
+  const nfcChannel = MethodChannel('flutter_nfc_kit/method');
+
+  setUp(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(nfcChannel, (call) async {
+          if (call.method == 'getNFCAvailability') {
+            return 'not_supported';
+          }
+          return null;
+        });
+  });
+
+  tearDown(() {
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+        .setMockMethodCallHandler(nfcChannel, null);
+  });
+
   testWidgets('app starts on the NFC tab', (WidgetTester tester) async {
     SharedPreferences.setMockInitialValues({'app_language': 'ru'});
     await tester.pumpWidget(const NfcSpoolApp());

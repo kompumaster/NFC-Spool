@@ -11,6 +11,7 @@ void main() {
     await service.ensureLoaded();
 
     expect(service.isAvailable, isTrue);
+    expect(service.status, NfcStatus.available);
     expect(service.isChecking, isFalse);
 
     service.dispose();
@@ -22,16 +23,34 @@ void main() {
 
     expect(service.isAvailable, isFalse);
     expect(service.availability, NFCAvailability.disabled);
+    expect(service.status, NfcStatus.disabled);
 
     service.dispose();
   });
 
-  test('failed probe is treated as unsupported', () async {
-    final service = NfcService(probe: () async => throw Exception('no plugin'));
+  test('failed probe is reported as error and can be retried', () async {
+    var fail = true;
+    final service = NfcService(
+      probe: () async {
+        if (fail) {
+          throw Exception('no plugin');
+        }
+        return NFCAvailability.available;
+      },
+    );
     await service.ensureLoaded();
 
+    expect(service.status, NfcStatus.error);
     expect(service.isAvailable, isFalse);
-    expect(service.isUnsupported, isTrue);
+    expect(service.isUnsupported, isFalse);
+    expect(service.error, isNotNull);
+
+    fail = false;
+    await service.refresh();
+
+    expect(service.status, NfcStatus.available);
+    expect(service.isAvailable, isTrue);
+    expect(service.error, isNull);
 
     service.dispose();
   });

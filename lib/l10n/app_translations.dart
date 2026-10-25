@@ -77,6 +77,9 @@ class AppTranslations {
     'NFC не поддерживается': 'NFC is not supported',
     'Этот телефон не умеет работать с NFC-метками.':
         'This phone cannot work with NFC tags.',
+    'Не удалось проверить NFC': 'Could not check NFC',
+    'Нажмите «Проверить», чтобы попробовать снова.':
+        'Tap “Check” to try again.',
     'Проверка NFC…': 'Checking NFC…',
     'Определяю доступность NFC на телефоне.':
         'Checking NFC availability on this phone.',
