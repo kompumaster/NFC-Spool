@@ -442,7 +442,11 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
           );
         });
       }
-      _message('OpenSpool-метка записана и проверена');
+      _message(
+        profile == OpenSpoolProfile.u1
+            ? 'Snapmaker-метка записана и проверена (${result.ntagType.label})'
+            : 'OpenSpool-метка записана и проверена (${result.ntagType.label})',
+      );
     } catch (e) {
       if (mounted) {
         _message(e.toString());
