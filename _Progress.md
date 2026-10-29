@@ -89,6 +89,8 @@
 - Удалены неиспользуемые переводы.
 - Стабильный прогон тестов по файлам и CI.
 - Подготовлены universal и split APK; установлена arm64-v8a `0.1.1`, versionCode `2002`.
+- CI на GitHub прошёл на Ubuntu и Windows.
+- APK загружены в GitHub release `v0.1.1`.
 
 ### Подпись
 
