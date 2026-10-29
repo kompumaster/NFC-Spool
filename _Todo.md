@@ -9,7 +9,7 @@
   - legacy `OpenSpoolBinCodec.dumpSize`.
 - [x] Добавить adaptive icon для Android 8+.
 - [ ] `usesCleartextTraffic`: оставить глобально, пока не принято другое решение. Статический `network_security_config` не покрывает произвольный IP принтера; при необходимости добавить проверку приватного IP в `SnapmakerService`.
-- [ ] Проверить сборку из чистого клона, в том числе Gradle wrapper.
+- [x] Проверить сборку из чистого клона, в том числе Gradle wrapper.
 
 ## Тесты
 

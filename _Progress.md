@@ -74,6 +74,14 @@
 - Добавлен `_tools\run_tests.bat`: запускает файлы по одному и повторяет только сбой загрузки движка.
 - Добавлен CI `.github/workflows/ci.yml` для Ubuntu и Windows.
 
+### Проверка сборки
+
+- Чистый клон собирается: `flutter pub get` и `flutter build apk --release`.
+- Flutter сам восстанавливает `gradlew`, `gradlew.bat` и `gradle-wrapper.jar`; `gradlew --version` показывает Gradle 9.3.1.
+- В APK есть `mipmap/ic_launcher` с `anydpi-v26` и `mipmap/ic_launcher_foreground` для всех плотностей.
+- Тесты в чистом клоне проходят через `_tools\run_tests.bat`.
+- Без `android/key.properties` release APK подписывается debug-ключом, как задумано в `build.gradle.kts`.
+
 ### Подпись
 
 - Старый ключ `RFID Chameleon` удалён из `NFC_Spool`.
