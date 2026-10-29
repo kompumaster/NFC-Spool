@@ -19,6 +19,9 @@ migrate_working_dir/
 # Local logo sources
 /logo_src/
 
+# Local scratch space
+/_tmp/
+
 # Flutter / Dart
 .dart_tool/
 .flutter-plugins
