@@ -7,7 +7,7 @@ F-Droid читает отсюда описание, иконку, скриншо
 - `fastlane/metadata/android/en-US/images/phoneScreenshots/`
 - `fastlane/metadata/android/ru-RU/images/phoneScreenshots/`
 
-Имена файлов: `1.png`, `2.png`, `3.png`, `4.png`.
+Имена файлов: `1.png`, `2.png`, `3.png`, `4.png`, `5.png`.
 
 Рекомендуемый набор:
 

@@ -23,7 +23,7 @@
 - [x] Сменить application ID на `io.github.kompumaster.nfcspool`.
 - [x] Подготовить Fastlane-метаданные, иконку и changelog.
 - [x] Подготовить рецепт `fdroid/io.github.kompumaster.nfcspool.yml`.
-- [ ] Добавить скриншоты в Fastlane: `en-US` и `ru-RU`.
+- [x] Добавить скриншоты в Fastlane: `en-US` и `ru-RU`.
 - [ ] Проверить рецепт в CI fdroiddata.
 - [ ] Открыть merge request в fdroiddata.
 - [ ] Учесть правило 3 месяцев: репозиторий создан 25.10.2026.

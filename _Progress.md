@@ -96,6 +96,7 @@
 
 - Application ID изменён на `io.github.kompumaster.nfcspool`.
 - Добавлены Fastlane-метаданные: описания, иконка 512x512, changelog.
+- Добавлены 5 скриншотов для `en-US` и `ru-RU`.
 - Подготовлен рецепт `fdroid/io.github.kompumaster.nfcspool.yml`.
 - Собраны universal и split APK; установлена arm64-v8a `0.1.2`, versionCode `2003`.
 - CI на GitHub прошёл на Ubuntu и Windows.
