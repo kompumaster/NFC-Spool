@@ -98,6 +98,8 @@
 - Добавлены Fastlane-метаданные: описания, иконка 512x512, changelog.
 - Подготовлен рецепт `fdroid/io.github.kompumaster.nfcspool.yml`.
 - Собраны universal и split APK; установлена arm64-v8a `0.1.2`, versionCode `2003`.
+- CI на GitHub прошёл на Ubuntu и Windows.
+- APK загружены в GitHub release `v0.1.2`.
 - Старая установка `com.nfcspool.app` остаётся отдельным приложением; данные автоматически не переносятся.
 
 ### Подпись
