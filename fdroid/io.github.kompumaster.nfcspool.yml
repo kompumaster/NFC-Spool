@@ -1,0 +1,35 @@
+Categories:
+  - Tools
+License: GPL-3.0-only
+AuthorName: kompumaster
+AuthorWebSite: https://github.com/kompumaster
+WebSite: https://github.com/kompumaster/NFC-Spool
+SourceCode: https://github.com/kompumaster/NFC-Spool
+IssueTracker: https://github.com/kompumaster/NFC-Spool/issues
+Changelog: https://github.com/kompumaster/NFC-Spool/releases
+
+RepoType: git
+Repo: https://github.com/kompumaster/NFC-Spool.git
+
+Builds:
+  - versionName: 0.1.2
+    versionCode: 3
+    commit: v0.1.2
+    output: build/app/outputs/flutter-apk/app-release.apk
+    ndk: 28.2.13676358
+    srclibs:
+      - flutter@3.47.7
+    prebuild:
+      - export PUB_CACHE=$(pwd)/.pub-cache
+      - $$flutter$$/bin/flutter config --no-analytics
+      - $$flutter$$/bin/flutter pub get --enforce-lockfile
+    build:
+      - $$flutter$$/bin/flutter build apk --release
+    scandelete:
+      - .pub-cache
+
+AutoUpdateMode: Version
+UpdateCheckMode: Tags
+UpdateCheckData: pubspec.yaml|version:\s.+\+(\d+)|.|version:\s(.+)\+
+CurrentVersion: 0.1.2
+CurrentVersionCode: 3

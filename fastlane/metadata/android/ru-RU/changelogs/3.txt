@@ -1,0 +1,4 @@
+0.1.2
+- Новый application ID io.github.kompumaster.nfcspool.
+- Подготовка к публикации в F-Droid.
+- Функции приложения не изменились.

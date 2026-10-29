@@ -1,0 +1,1 @@
+Чтение и запись NFC-меток QIDI, OpenSpool и Snapmaker U1

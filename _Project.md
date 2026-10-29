@@ -18,9 +18,9 @@ Android-приложение для чтения и записи RFID-меток
 
 - Только Android.
 - Основной тестовый телефон: Xiaomi 13T Pro, arm64-v8a.
-- Package: `com.nfcspool.app`.
+- Package: `io.github.kompumaster.nfcspool`.
 - Отображаемое имя: `NFC/Spool`.
-- Версия: `0.1.1+2`.
+- Версия: `0.1.2+3`.
 
 ## Репозиторий
 

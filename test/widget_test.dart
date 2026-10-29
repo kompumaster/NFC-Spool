@@ -23,7 +23,7 @@ void main() {
           if (call.method == 'getAll') {
             return {
               'appName': 'NFC/Spool',
-              'packageName': 'com.nfcspool.app',
+              'packageName': 'io.github.kompumaster.nfcspool',
               'version': '0.1.0',
               'buildNumber': '1',
               'buildSignature': '',

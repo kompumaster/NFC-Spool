@@ -1,0 +1,1 @@
+NFC reader and writer for QIDI, OpenSpool and Snapmaker U1 filament tags

@@ -6,9 +6,9 @@
 
 - Приложение собрано, установлено на Xiaomi 13T Pro, пользователь подтвердил чтение и запись QIDI и OpenSpool.
 - `main` содержит релизный код и последующие коммиты с исправлениями и документацией.
-- Тег `v0.1.1` и GitHub release указывают на релизный коммит.
+- Тег `v0.1.2` и GitHub release указывают на релизный коммит.
 - APK в release обновлены.
-- На телефоне установлена arm64-v8a версия `0.1.1`, versionCode `2002`.
+- На телефоне установлена arm64-v8a версия `0.1.2`, versionCode `2003`.
 - `flutter analyze` проходит без ошибок.
 - Тесты проходят через `_tools\run_tests.bat`: 69 тестов, по файлам.
 
@@ -19,7 +19,7 @@
 - Удалены BLE, Chameleon, `flutter_blue_plus`, `permission_handler`, `logger`.
 - Удалены Bluetooth-разрешения.
 - Добавлены NFC-разрешение и `flutter_nfc_kit`.
-- Новый package: `com.nfcspool.app`.
+- Новый package: `io.github.kompumaster.nfcspool`.
 - Новый репозиторий и release.
 
 ### NFC
@@ -91,6 +91,14 @@
 - Подготовлены universal и split APK; установлена arm64-v8a `0.1.1`, versionCode `2002`.
 - CI на GitHub прошёл на Ubuntu и Windows.
 - APK загружены в GitHub release `v0.1.1`.
+
+### Релиз 0.1.2
+
+- Application ID изменён на `io.github.kompumaster.nfcspool`.
+- Добавлены Fastlane-метаданные: описания, иконка 512x512, changelog.
+- Подготовлен рецепт `fdroid/io.github.kompumaster.nfcspool.yml`.
+- Собраны universal и split APK; установлена arm64-v8a `0.1.2`, versionCode `2003`.
+- Старая установка `com.nfcspool.app` остаётся отдельным приложением; данные автоматически не переносятся.
 
 ### Подпись
 

@@ -1,0 +1,17 @@
+NFC/Spool reads and writes filament tags using the phone's built-in NFC. No external reader, Bluetooth adapter or Chameleon device is required.
+
+Supported tags:
+- QIDI: MIFARE Classic 1K, block 4, key A FFFFFFFFFFFF.
+- OpenSpool: NTAG215 and NTAG216, NDEF JSON.
+- Snapmaker U1: OpenSpool U1 profile and sending data to the printer over Wi-Fi.
+
+Features:
+- read and write filament tags;
+- save tags to a local list;
+- import and export .bin dumps: QIDI 1024 bytes, NTAG215 540 bytes, NTAG216 924 bytes;
+- send tag data to Snapmaker U1 on the local network;
+- Russian and English interface.
+
+The app contains no ads, analytics or tracking. It is free software under GPL-3.0, and the source code is available on GitHub.
+
+Requirements: Android 7.0 or newer and a phone with NFC. NTAG213 is not supported.
